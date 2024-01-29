@@ -13,8 +13,11 @@ class Subscriber extends StatefulWidget {
 
 class _SubscriberState extends State<Subscriber> {
   void _running() {
-    Address address = availableAddresses[0];
+    const Address address =
+        Address.widthdefault(finaladdress: 'nmea/DC-A6-32-FF-68-E1');
     address.connectToMqtt();
+    //Address address = availableAddresses[0];
+    //address.connectToMqtt();
   }
 
   @override
