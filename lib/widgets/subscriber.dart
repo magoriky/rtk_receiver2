@@ -13,8 +13,10 @@ class Subscriber extends StatefulWidget {
 
 class _SubscriberState extends State<Subscriber> {
   void _running() {
-    Address address2 =
-        Address(host: "test.mosquitto.org", topic: "/ricardo/probando/hello");
+    //Address address2 =
+    //Address(host: "test.mosquitto.org", topic: "/ricardo/probando/hello");
+    Address address2 = Address(
+        host: "118.40.176.90", topic: "/agip2/gcm/gnss/nmea/DC-A6-32-FF-68-E7");
 
     address2.beginConnection();
 

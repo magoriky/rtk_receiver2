@@ -1,5 +1,6 @@
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:rtk_receiver/models/position.dart';
 
 import 'dart:io';
 
@@ -66,9 +67,12 @@ class Address {
       final recMess = c[0].payload as MqttPublishMessage;
       final pt =
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      Position position = Position(message: pt);
+      position.convertMessage();
 
-      print(
-          'Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
+      //print(
+      //'Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
+      //print(pt);
     });
     print('EXAMPLE::Sleeping....');
     await MqttUtilities.asyncSleep(60);
