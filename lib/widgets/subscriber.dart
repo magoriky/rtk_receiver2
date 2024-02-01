@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rtk_receiver/models/address.dart';
-import 'package:rtk_receiver/data/list_of_mqtt_data.dart';
+//import 'package:rtk_receiver/data/list_of_mqtt_data.dart';
 
 class Subscriber extends StatefulWidget {
   const Subscriber({super.key});
@@ -13,9 +13,13 @@ class Subscriber extends StatefulWidget {
 
 class _SubscriberState extends State<Subscriber> {
   void _running() {
-    const Address address =
-        Address.widthdefault(finaladdress: 'nmea/DC-A6-32-FF-68-E1');
-    address.connectToMqtt();
+    Address address2 =
+        Address(host: "test.mosquitto.org", topic: "/ricardo/probando/hello");
+
+    address2.beginConnection();
+
+    //const Address address = Address.widthdefault(finaladdress: 'nmea/DC-A6-32-FF-68-E1');
+    //address.connectToMqtt();
     //Address address = availableAddresses[0];
     //address.connectToMqtt();
   }

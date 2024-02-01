@@ -1,61 +1,77 @@
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
-class Address {
-  const Address(
-      {required this.host,
-      required this.partialaddress,
-      required this.finaladdress});
+import 'dart:io';
 
-  const Address.widthdefault(
-      {this.host = "118.40.176.90",
-      this.partialaddress = "/aigp2/gcm/gnss/",
-      required this.finaladdress});
+class Address {
+  Address({required this.host, required this.topic});
 
   final String host;
-  final String partialaddress;
-  final String finaladdress;
+  final String topic;
 
-  void connectToMqtt() async {
-    //print('setter is working');
-    String willTopic = partialaddress + finaladdress;
-    final MqttServerClient client = MqttServerClient(host, 'suny');
-    final MqttConnectMessage connectMessage = MqttConnectMessage()
-        .withClientIdentifier('suny')
-        .startClean() // Start a clean session
-        .withWillQos(MqttQos.atLeastOnce)
-        .withWillTopic(willTopic)
-        .withWillMessage('Connection closed unexpectedly')
-        .withWillRetain()
-        .authenticateAs('Suny', '1111');
+  var pongCount = 0;
 
-    client.connectionMessage = connectMessage;
-    // Connect to the broker
+  void _onSubscribed(String topic) {
+    print('Subscription confirmed for topic $topic');
+  }
+
+  void _onDisconnected() {
+    print("Disconnected from server");
+  }
+
+  void _onConnected() {
+    print("Connected to server");
+  }
+
+  void beginConnection() async {
+    MqttServerClient client = MqttServerClient(
+        host, 'ricardoSuny9348j934jg98vn984utvnijr8j4t9nijvriofjenofij');
+    client.setProtocolV311();
+    client.keepAlivePeriod = 6000;
+    client.connectTimeoutPeriod = 2000;
+    client.onDisconnected =
+        _onDisconnected; //* unsolicited disconnection callback
+    client.onConnected = _onConnected; //* successfull connection callback
+    client.onSubscribed = _onSubscribed; //* successfull subscription callback
+
+    final connMess = MqttConnectMessage()
+        .withClientIdentifier("ricardoSuny")
+        .withWillTopic('willTopic')
+        .withWillMessage('My will Message')
+        .startClean()
+        .withWillQos(MqttQos.atLeastOnce);
+    print('Mosquito client connecting.......');
+    client.connectionMessage = connMess;
+
     try {
       await client.connect();
-    } catch (e) {
-      print('Exception: $e');
+    } on NoConnectionException catch (e) {
+      print("client exception - $e");
       client.disconnect();
     }
-    // Subscribe to a topic
 
-    client.subscribe(willTopic, MqttQos.atLeastOnce);
+    if (client.connectionStatus!.state == MqttConnectionState.connected) {
+      print('Mosquito client connected Successfuly');
+    } else {
+      print(
+          'Error Mosquito client connection failed - disconnecting, status is ${client.connectionStatus}');
+      client.disconnect();
+      exit(-1);
+    }
 
-    // Listen for incoming messages
-    client.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-      final MqttPublishMessage message = c[0].payload as MqttPublishMessage;
-      final String payload =
-          MqttPublishPayload.bytesToStringAsString(message.payload.message);
-      print("I received a message");
+    print('Subscribing to $topic ');
+    client.subscribe(topic, MqttQos.atLeastOnce);
 
-      print('Received message: $payload from topic: ${c[0].topic}');
+    client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+      final recMess = c[0].payload as MqttPublishMessage;
+      final pt =
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+      print(
+          'Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
     });
-
-    // Disconnect from the broker when done
-    print("I will wait 60 seconds");
-    await Future.delayed(
-        const Duration(seconds: 60)); // Wait for some time before disconnecting
-    client.disconnect();
-    print("I finished waiting and I am disconnecting");
+    print('EXAMPLE::Sleeping....');
+    await MqttUtilities.asyncSleep(60);
+    print("Finished the code");
   }
 }
