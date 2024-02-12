@@ -61,4 +61,27 @@ class Position {
 
     print("the pairLatLng is: $pairLatLng");
   }
+
+  List<double> getCoordinates() {
+    List<String> lines = message.split("\$");
+    lines.removeAt(0); //*Get rid of the first element, which is always empty;
+    //lines = lines
+    //    .where((element) => (element.contains(_name1) ||
+    //        element.contains(_name2) ||
+    //        element.contains(_name3)))
+    //    .toList();
+    //for (int i = 0; i < lines.length; ++i) {
+    //  print("Line $i is : ${lines[i]}");
+    //}
+
+    _GNRMC = lines.where((element) => element.contains(_name1)).toList();
+    _GNVTG = lines.where((element) => element.contains(_name2)).toList();
+    _GNGGA = lines.where((element) => element.contains(_name3)).toList();
+
+    List<double> pairLatLng =
+        _GNRMC.isEmpty ? _getLatLng(_GNGGA) : _getLatLng(_GNRMC);
+
+    print("the pairLatLng is: $pairLatLng");
+    return pairLatLng;
+  }
 }

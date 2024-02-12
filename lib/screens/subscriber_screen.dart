@@ -10,7 +10,8 @@ class SubscriberScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     int selectedPageIndex = 2;
     void selectPage(int index) {
-      ref.read(selectedPageIndexProvider.notifier).state = index;
+      ref.read(selectedPageIndexProvider.notifier).state =
+          index; //* Allows modifiing the provider
       //selectedPageIndexChecking = ref.watch(selectedPageIndexProvider);
       //print("The updated index is $selectedPageIndexChecking");
       //print("the updated index should be $index");
