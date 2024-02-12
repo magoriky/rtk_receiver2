@@ -1,3 +1,5 @@
+import 'package:proj4dart/proj4dart.dart';
+
 class Position {
   Position({required this.message});
   String message;
@@ -9,10 +11,18 @@ class Position {
   List<String> _GNVTG = [];
   List<String> _GNGGA = [];
 
-  //int _getIndexFromString(List<String> list){
-  //  List<String> listOfNames = ["\$GNRMC", "\$GNVTG",];
-  //  return
-  //}
+  List<double> _useMercatorConverter(List<double> valuePair) {
+    double latInDeg = ((valuePair[0] - (valuePair[0] % 100)) / 100) +
+        ((valuePair[0] % 100) / 60);
+    double lngInDeg = ((valuePair[1] - (valuePair[1] % 100)) / 100) +
+        ((valuePair[1] % 100) / 60);
+
+    //* Define Point
+    // var pointSrc = Point(x:lngInDeg, y:latInDeg);
+    // var projDst = Projection.get('EPSG:4326');
+
+    return [latInDeg, lngInDeg];
+  }
 
   List<double> _getLatLng(List<String>? line) {
     if (line != null && line.isNotEmpty) {
@@ -24,7 +34,7 @@ class Position {
           double.parse(lineSplit[indexLatitude]),
           double.parse(lineSplit[indexLongitude])
         ];
-        return pairLatLng;
+        return _useMercatorConverter(pairLatLng);
       }
     }
     return [];

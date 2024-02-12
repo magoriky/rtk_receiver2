@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rtk_receiver/widgets/subscriber.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rtk_receiver/screens/mercator_calculator.dart';
+import 'package:rtk_receiver/providers/providers_general.dart';
+import 'package:rtk_receiver/screens/mercator_calculator_inverse.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -12,27 +15,33 @@ final theme = ThemeData(
 );
 
 void main() {
-  runApp(const App());
+  runApp(const ProviderScope(
+    child: App(),
+  ));
 }
 
-class App extends StatelessWidget {
+class App extends ConsumerStatefulWidget {
   const App({super.key});
+  @override
+  ConsumerState<App> createState() {
+    return _AppState();
+  }
+}
 
+class _AppState extends ConsumerState<App> {
   @override
   Widget build(BuildContext context) {
-    const String appTitle = "RTK Receiver";
+    Widget content = const MercatorCalculator();
+    final selectedPageIndex = ref.watch(selectedPageIndexProvider);
+    print("The selected page index is: $selectedPageIndex");
+    if (selectedPageIndex == 1) {
+      content = const MercatorCalculatorInverse();
+    }
+
     return MaterialApp(
       theme: theme,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            appTitle,
-          ),
-        ),
-        body: const Center(
-          child: Subscriber(),
-        ),
-      ),
+      home: content,
     );
+    //home: const MercatorCalculatorInverse());
   }
 }

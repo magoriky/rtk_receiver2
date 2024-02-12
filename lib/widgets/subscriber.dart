@@ -16,8 +16,8 @@ class _SubscriberState extends State<Subscriber> {
     //Address address2 =
     //Address(host: "test.mosquitto.org", topic: "/ricardo/probando/hello");
     Address address2 = Address(
-        host: "118.40.176.90", topic: "/agip2/gcm/gnss/nmea/DC-A6-32-FF-68-E7");
-
+        host: "118.40.176.90", topic: "/agip2/gcm/gnss/DC-A6-32-FF-69-1A");
+//
     address2.beginConnection();
 
     //const Address address = Address.widthdefault(finaladdress: 'nmea/DC-A6-32-FF-68-E1');
