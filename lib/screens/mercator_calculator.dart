@@ -22,13 +22,17 @@ class _MercatorCalculatorState extends ConsumerState<MercatorCalculator> {
   bool longitudeIsInvalid = true;
   int selectedPageIndex = 0;
 
+  //void _selectPage(int index) {
+  //  setState(() {
+  //    ref.read(selectedPageIndexProvider.notifier).state = index;
+  //    //selectedPageIndexChecking = ref.watch(selectedPageIndexProvider);
+  //    //print("The updated index is $selectedPageIndexChecking");
+  //    //print("the updated index should be $index");
+  //  });
+  //}
+
   void _selectPage(int index) {
-    setState(() {
-      ref.read(selectedPageIndexProvider.notifier).state = index;
-      //selectedPageIndexChecking = ref.watch(selectedPageIndexProvider);
-      //print("The updated index is $selectedPageIndexChecking");
-      //print("the updated index should be $index");
-    });
+    ref.read(selectedPageIndexProvider.notifier).state = index;
   }
 
   Widget convertLatLong2Meters() {
@@ -158,7 +162,9 @@ class _MercatorCalculatorState extends ConsumerState<MercatorCalculator> {
           BottomNavigationBarItem(
               icon: Icon(Icons.location_on), label: 'Latitude-Longitude'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.location_searching), label: 'Mercator')
+              icon: Icon(Icons.location_searching), label: 'Mercator'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.search), label: 'Connect to Mqtt'),
         ],
       ),
     );
