@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:rtk_receiver/models/position.dart';
 
 class Subscriber2 extends StatefulWidget {
   const Subscriber2({super.key});
@@ -14,8 +15,8 @@ class Subscriber2 extends StatefulWidget {
 class _Subscriber2State extends State<Subscriber2> {
   final _hostController = TextEditingController();
   final _topicController = TextEditingController();
-  bool displayIndicator = false;
   late MqttServerClient client;
+  bool displayIndicator = false;
 
   @override
   void dispose() {
@@ -55,9 +56,11 @@ class _Subscriber2State extends State<Subscriber2> {
           final latestUpdate = updates[0].payload as MqttPublishMessage;
           final pt = MqttPublishPayload.bytesToStringAsString(
               latestUpdate.payload.message);
+          Position position = Position(message: pt);
+          List<double> receivedCoordinates = position.getCoordinates();
           return Center(
               child: Text(
-            pt,
+            "The pairLatLng is: $receivedCoordinates",
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge!
