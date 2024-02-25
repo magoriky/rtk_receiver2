@@ -56,16 +56,43 @@ class _Subscriber2State extends State<Subscriber2> {
           final latestUpdate = updates[0].payload as MqttPublishMessage;
           final pt = MqttPublishPayload.bytesToStringAsString(
               latestUpdate.payload.message);
+          //print(pt);
           Position position = Position(message: pt);
-          List<double> receivedCoordinates = position.getCoordinates();
-          return Center(
-              child: Text(
-            "The pairLatLng is: $receivedCoordinates",
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(color: Theme.of(context).colorScheme.onBackground),
-          ));
+          Map<Data, dynamic> receivedData = position.getData();
+
+          //List<double> receivedCoordinates = position.getCoordinates();
+          //TODO: Please erase this line after testing
+          position.convertMessage();
+          /////////////////////////////////
+          return Column(children: [
+            Row(children: [
+              Text("Latitude:",
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground)),
+              const SizedBox(width: 50),
+              Text("${receivedData[Data.latitude]}",
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground)),
+            ]),
+            Row(children: [
+              Text("Longitude:",
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground)),
+              const SizedBox(width: 40),
+              Text("${receivedData[Data.longitude]}",
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground))
+            ]),
+            Row(children: [
+              Text("Time:",
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground)),
+              const SizedBox(width: 80),
+              Text("${receivedData[Data.time]}",
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground))
+            ]),
+          ]);
         });
   }
 

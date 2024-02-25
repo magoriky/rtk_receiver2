@@ -1,4 +1,10 @@
-import 'package:proj4dart/proj4dart.dart';
+import 'package:rtk_receiver/functions/convert_time.dart';
+
+enum Data {
+  latitude,
+  longitude,
+  time,
+}
 
 class Position {
   Position({required this.message});
@@ -22,6 +28,17 @@ class Position {
     // var projDst = Projection.get('EPSG:4326');
 
     return [latInDeg, lngInDeg];
+  }
+
+  String _getTime(List<String>? line) {
+    if (line != null && line.isNotEmpty) {
+      if (line[0].contains(_name1) || line[0].contains(_name3)) {
+        List<String> lineSplit = line[0].split(",");
+        String time = lineSplit[1];
+        return utc2kst(time);
+      }
+    }
+    return " ";
   }
 
   List<double> _getLatLng(List<String>? line) {
@@ -59,7 +76,9 @@ class Position {
     List<double> pairLatLng =
         _GNRMC.isEmpty ? _getLatLng(_GNGGA) : _getLatLng(_GNRMC);
 
-    print("the pairLatLng is: $pairLatLng");
+    String convertedTime = _GNRMC.isEmpty ? _getTime(_GNGGA) : _getTime(_GNRMC);
+
+    print("the pairLatLng is: $pairLatLng \ntime is: $convertedTime");
   }
 
   List<double> getCoordinates() {
@@ -81,7 +100,35 @@ class Position {
     List<double> pairLatLng =
         _GNRMC.isEmpty ? _getLatLng(_GNGGA) : _getLatLng(_GNRMC);
 
-    print("the pairLatLng is: $pairLatLng");
+    //print("the pairLatLng is: $pairLatLng");
     return pairLatLng;
+  }
+
+  Map<Data, dynamic> getData() {
+    List<String> lines = message.split("\$");
+    lines.removeAt(0); //*Get rid of the first element, which is always empty;
+    //lines = lines
+    //    .where((element) => (element.contains(_name1) ||
+    //        element.contains(_name2) ||
+    //        element.contains(_name3)))
+    //    .toList();
+    //for (int i = 0; i < lines.length; ++i) {
+    //  print("Line $i is : ${lines[i]}");
+    //}
+
+    _GNRMC = lines.where((element) => element.contains(_name1)).toList();
+    _GNVTG = lines.where((element) => element.contains(_name2)).toList();
+    _GNGGA = lines.where((element) => element.contains(_name3)).toList();
+
+    List<double> pairLatLng =
+        _GNRMC.isEmpty ? _getLatLng(_GNGGA) : _getLatLng(_GNRMC);
+
+    String convertedTime = _GNRMC.isEmpty ? _getTime(_GNGGA) : _getTime(_GNRMC);
+
+    return {
+      Data.latitude: pairLatLng[0],
+      Data.longitude: pairLatLng[1],
+      Data.time: convertedTime
+    };
   }
 }
