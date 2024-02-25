@@ -34,7 +34,7 @@ class _AppState extends ConsumerState<App> {
   Widget build(BuildContext context) {
     Widget content = const MercatorCalculator();
     final selectedPageIndex = ref.watch(selectedPageIndexProvider);
-    print("The selected page index is: $selectedPageIndex");
+    //print("The selected page index is: $selectedPageIndex");
     if (selectedPageIndex == 1) {
       content = const MercatorCalculatorInverse();
     }

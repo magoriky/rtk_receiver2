@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rtk_receiver/widgets/subscriber.dart';
+import 'package:rtk_receiver/widgets/subscriber2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rtk_receiver/providers/providers_general.dart';
 
@@ -21,7 +21,7 @@ class SubscriberScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("Mqtt subscriber"),
       ),
-      body: const Subscriber(),
+      body: const Subscriber2(),
       bottomNavigationBar: BottomNavigationBar(
         onTap: selectPage,
         currentIndex: selectedPageIndex,

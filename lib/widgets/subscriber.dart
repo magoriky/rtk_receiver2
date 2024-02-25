@@ -21,7 +21,7 @@ class _SubscriberState extends State<Subscriber> {
     //Address address2 =
     //Address(host: "test.mosquitto.org", topic: "/ricardo/probando/hello");
     Address address2 = Address(
-        host: "118.40.176.90", topic: "/agip2/gcm/gnss/DC-A6-32-FF-68-21");
+        host: "118.40.176.90", topic: "/agip2/gcm/gnss/DC-A6-32-FF-69-7A");
 //
     address2.beginConnection();
 
